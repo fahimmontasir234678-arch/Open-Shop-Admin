@@ -1,0 +1,2415 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard - Online Shop</title>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #e0e5ec;
+            color: #2c3e50;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ================================================= */
+        /* LOGIN SCREEN STYLES */
+        /* ================================================= */
+
+        #authScreen {
+            position: fixed;
+            inset: 0;
+            background: #e0e5ec;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-card {
+            background: #e0e5ec;
+            padding: 30px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 10px 10px 20px #b8bec9, -10px -10px 20px #ffffff;
+            text-align: center;
+        }
+
+        .auth-card h2 {
+            color: #059669;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+
+        /* ================================================= */
+        /* HEADER */
+        /* ================================================= */
+
+        header {
+            background: linear-gradient(145deg, #eef3f8, #d8e2ec);
+            padding: 1.2rem 1rem;
+            box-shadow: 0 8px 20px rgba(163, 177, 198, 0.6);
+            text-align: center;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 1.4rem;
+            color: #059669;
+            font-weight: 800;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1rem 2rem 1rem;
+            flex: 1;
+            width: 100%;
+        }
+
+        /* ================================================= */
+        /* NAVIGATION */
+        /* ================================================= */
+
+        .nav-tabs {
+            position: relative;
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 6px;
+            background: #e0e5ec;
+            border-radius: 16px;
+            box-shadow:
+                inset 3px 3px 6px #b8bec9,
+                inset -3px -3px 6px #ffffff;
+            margin-bottom: 1.5rem;
+            scrollbar-width: none;
+            scroll-behavior: smooth;
+        }
+
+        .nav-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-glider {
+            position: absolute;
+            top: 6px;
+            left: 0;
+            height: calc(100% - 12px);
+            background: #e0e5ec;
+            border-radius: 12px;
+            box-shadow:
+                inset 3px 3px 6px #b8bec9,
+                inset -3px -3px 6px #ffffff;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .tab-btn {
+            position: relative;
+            z-index: 2;
+            background: transparent;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            color: #64748b;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.88rem;
+            flex-shrink: 0;
+        }
+
+        .tab-btn.active {
+            color: #10b981;
+        }
+
+        /* ================================================= */
+        /* TAB CONTENT */
+        /* ================================================= */
+
+        .tab-content {
+            display: none;
+            background: #e0e5ec;
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow:
+                8px 8px 16px #b8bec9,
+                -8px -8px 16px #ffffff;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 2px solid rgba(184, 190, 201, 0.5);
+            padding-bottom: 8px;
+        }
+
+        /* ================================================= */
+        /* FORM */
+        /* ================================================= */
+
+        .form-group {
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #334155;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #e0e5ec;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #2c3e50;
+            box-shadow:
+                inset 3px 3px 6px #b8bec9,
+                inset -3px -3px 6px #ffffff;
+            outline: none;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        /* ================================================= */
+        /* BUTTON */
+        /* ================================================= */
+
+        .btn {
+            background-color: #e0e5ec;
+            color: #10b981;
+            font-weight: bold;
+            font-size: 0.9rem;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow:
+                4px 4px 8px #b8bec9,
+                -4px -4px 8px #ffffff;
+            transition: transform 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+            box-shadow:
+                inset 2px 2px 4px #b8bec9,
+                inset -2px -2px 4px #ffffff;
+        }
+
+        .btn-danger {
+            color: #ef4444;
+        }
+
+        .btn-primary {
+            color: #2563eb;
+        }
+
+        /* ================================================= */
+        /* DATA CARD */
+        /* ================================================= */
+
+        .data-card {
+            background: #e0e5ec;
+            padding: 12px 16px;
+            border-radius: 12px;
+            box-shadow:
+                5px 5px 10px #b8bec9,
+                -5px -5px 10px #ffffff;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        /* ================================================= */
+        /* STATUS SELECT */
+        /* ================================================= */
+
+        .status-select {
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            background: #e0e5ec;
+            box-shadow:
+                inset 2px 2px 4px #b8bec9,
+                inset -2px -2px 4px #ffffff;
+            border: none;
+            outline: none;
+            color: #334155;
+        }
+
+        /* ================================================= */
+        /* PAYMENT SETTINGS */
+        /* ================================================= */
+
+        .payment-setting-card {
+            background: #e0e5ec;
+            padding: 15px;
+            border-radius: 14px;
+            margin-bottom: 15px;
+            box-shadow:
+                5px 5px 10px #b8bec9,
+                -5px -5px 10px #ffffff;
+        }
+
+        .payment-setting-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(184,190,201,.55);
+        }
+
+        .payment-setting-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 800;
+            color: #1e293b;
+            font-size: .95rem;
+        }
+
+        .payment-setting-title i {
+            font-size: 1.1rem;
+        }
+
+        /* ================================================= */
+        /* TOGGLE */
+        /* ================================================= */
+
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            background: #e0e5ec;
+            padding: 9px 11px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            box-shadow:
+                inset 2px 2px 4px #b8bec9,
+                inset -2px -2px 4px #ffffff;
+        }
+
+        .toggle-label {
+            font-size: .82rem;
+            font-weight: 700;
+            color: #475569;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 26px;
+            flex-shrink: 0;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background: #cbd5e1;
+            border-radius: 30px;
+            transition: .25s;
+            box-shadow:
+                inset 2px 2px 4px rgba(0,0,0,.15);
+        }
+
+        .slider:before {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            left: 3px;
+            top: 3px;
+            background: #ffffff;
+            border-radius: 50%;
+            transition: .25s;
+            box-shadow: 2px 2px 5px rgba(0,0,0,.2);
+        }
+
+        .switch input:checked + .slider {
+            background: #10b981;
+        }
+
+        .switch input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        .payment-help {
+            background: rgba(37,99,235,.06);
+            border-left: 3px solid #2563eb;
+            padding: 9px 10px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: .76rem;
+            color: #475569;
+            line-height: 1.5;
+        }
+
+        .payment-save-btn {
+            width: 100%;
+            justify-content: center;
+            margin-top: 5px;
+        }
+
+        /* ================================================= */
+        /* MODAL STYLES */
+        /* ================================================= */
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-container {
+            background: #e0e5ec;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            border-radius: 20px;
+            box-shadow: 10px 10px 20px #b8bec9, -10px -10px 20px #ffffff;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.show .modal-container {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 16px 20px;
+            background: rgba(184, 190, 201, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(184, 190, 201, 0.6);
+        }
+
+        .modal-title {
+            font-weight: 800;
+            color: #1e293b;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        /* ================================================= */
+        /* TOAST */
+        /* ================================================= */
+
+        #toastBox {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform:
+                translateX(-50%)
+                translateY(100px);
+            background: #1e293b;
+            color: #fff;
+            padding: 12px 22px;
+            border-radius: 30px;
+            font-size: 0.88rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            transition: transform 0.3s ease;
+            z-index: 99999;
+        }
+
+        #toastBox.show {
+            transform:
+                translateX(-50%)
+                translateY(0);
+        }
+
+        @media(max-width:600px) {
+            .tab-content {
+                padding: 1.1rem;
+            }
+        }
+
+    </style>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+</head>
+
+<body>
+
+<!-- ================================================= -->
+<!-- LOGIN & AUTH SCREEN -->
+<!-- ================================================= -->
+<div id="authScreen">
+    <div class="auth-card">
+        <h2 id="authTitle"><i class="fa-solid fa-lock"></i> এডমিন প্যানেল সিকিউরিটি</h2>
+        <p id="authDesc" style="font-size: 0.85rem; color: #64748b; margin-bottom: 15px;">দয়া করে আপনার পাসওয়ার্ড দিন অথবা ফিঙ্গারপ্রিন্ট ব্যবহার করুন।</p>
+        
+        <form id="authForm" onsubmit="handleAuthSubmit(event)">
+            <div class="form-group">
+                <label id="authInputLabel">পাসওয়ার্ড লিখুন:</label>
+                <input type="password" id="authPasswordInput" placeholder="পাসওয়ার্ড দিন..." required>
+            </div>
+            <button type="submit" class="btn" id="authSubmitBtn" style="margin-bottom: 10px;">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i> প্রবেশ করুন
+            </button>
+        </form>
+
+        <button type="button" class="btn btn-primary" id="fingerprintBtn" onclick="loginWithFingerprint()" style="display:none; margin-bottom: 10px;">
+            <i class="fa-solid fa-fingerprint"></i> ফিঙ্গারপ্রিন্ট দিয়ে লগইন করুন
+        </button>
+
+        <button type="button" class="btn" id="setupFingerprintBtn" onclick="setupFingerprint()" style="display:none; background: rgba(16,185,129,0.1); color:#059669; font-size: 0.8rem;">
+            <i class="fa-solid fa-shield-halved"></i> এই ডিভাইসে ফিঙ্গারপ্রিন্ট সেটআপ করুন
+        </button>
+    </div>
+</div>
+
+<div id="toastBox">
+    <span id="toastMsg">সফল হয়েছে</span>
+</div>
+
+<!-- ================================================= -->
+<!-- ORDER HISTORY MODAL -->
+<!-- ================================================= -->
+
+<div class="modal-overlay" id="orderHistoryModal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <div class="modal-title">
+                <i class="fa-solid fa-clock-rotate-left" style="color:#2563eb;"></i>
+                অর্ডার হিস্ট্রি ও সংক্ষিপ্ত রিপোর্ট
+            </div>
+            <button type="button" class="btn btn-danger" onclick="toggleHistoryModal(false)" style="padding: 6px 10px; font-size: 0.8rem; width: auto;">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            
+            <div class="form-group">
+                <label><i class="fa-solid fa-calendar-days" style="color:#10b981;"></i> সময়সীমা ফিল্টার করুন:</label>
+                <select id="historyTimeRange" onchange="renderOrderHistory()" style="font-weight: 700;">
+                    <option value="1">শেষ ১ মাস (Last 1 Month)</option>
+                    <option value="2">শেষ ২ মাস (Last 2 Months)</option>
+                    <option value="6">শেষ ৬ মাস (Last 6 Months)</option>
+                    <option value="12">সর্বোচ্চ ১ বছর (Last 1 Year)</option>
+                    <option value="all">সর্বকালের (All Time)</option>
+                </select>
+            </div>
+
+            <!-- Summary Cards Container -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 20px;">
+                
+                <div style="background: rgba(16, 185, 129, 0.08); padding: 15px; border-radius: 12px; box-shadow: inset 3px 3px 6px #b8bec9, inset -3px -3px 6px #ffffff; border-left: 4px solid #10b981;">
+                    <div style="font-size: 0.82rem; font-weight: 700; color: #065f46; margin-bottom: 5px;">
+                        <i class="fa-solid fa-box-check"></i> সফল রিসিভড অর্ডার (Delivered)
+                    </div>
+                    <div id="historyDeliveredCount" style="font-size: 1.4rem; font-weight: 800; color: #047857; margin-bottom: 5px;">0 টি</div>
+                    <div style="font-size: 0.8rem; color: #065f46;">মোট পরিমাণ: <strong id="historyDeliveredTotal">৳ 0</strong></div>
+                </div>
+
+                <div style="background: rgba(239, 68, 68, 0.08); padding: 15px; border-radius: 12px; box-shadow: inset 3px 3px 6px #b8bec9, inset -3px -3px 6px #ffffff; border-left: 4px solid #ef4444;">
+                    <div style="font-size: 0.82rem; font-weight: 700; color: #991b1b; margin-bottom: 5px;">
+                        <i class="fa-solid fa-ban"></i> ক্যান্সেলড অর্ডার (Cancelled)
+                    </div>
+                    <div id="historyCancelledCount" style="font-size: 1.4rem; font-weight: 800; color: #b91c1c; margin-bottom: 5px;">0 টি</div>
+                    <div style="font-size: 0.8rem; color: #991b1b;">মোট পরিমাণ: <strong id="historyCancelledTotal">৳ 0</strong></div>
+                </div>
+
+            </div>
+
+            <div class="section-title" style="font-size: 0.95rem;">
+                <i class="fa-solid fa-list" style="color:#2563eb;"></i> বিস্তারিত তালিকা
+            </div>
+
+            <div id="historyOrdersListContainer" style="display: flex; flex-direction: column; gap: 10px;">
+                <!-- List will be rendered here -->
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<header>
+
+    <h1>
+        <i class="fa-solid fa-user-shield"></i>
+        শপ এডমিন প্যানেল
+    </h1>
+
+    <button type="button" class="btn btn-danger" onclick="logoutAdmin()" style="width: auto; padding: 6px 12px; font-size: 0.8rem;">
+        <i class="fa-solid fa-right-from-bracket"></i> লগআউট
+    </button>
+
+</header>
+
+<div class="container">
+
+    <!-- ================================================= -->
+    <!-- NAVIGATION -->
+    <!-- ================================================= -->
+
+    <div class="nav-tabs" id="navTabsContainer">
+
+        <div class="nav-glider" id="navGlider"></div>
+
+        <button class="tab-btn active"
+                onclick="switchTab('ordersTab', this)">
+            <i class="fa-solid fa-basket-shopping"></i>
+            অর্ডারসমূহ
+        </button>
+
+        <button class="tab-btn"
+                onclick="switchTab('productsTab', this)">
+            <i class="fa-solid fa-box-open"></i>
+            প্রোডাক্টস
+        </button>
+
+        <button class="tab-btn"
+                onclick="switchTab('shopSettingsTab', this)">
+            <i class="fa-solid fa-sliders"></i>
+            শপ সেটিংস
+        </button>
+
+        <button class="tab-btn"
+                onclick="switchTab('deliveryTab', this)">
+            <i class="fa-solid fa-truck"></i>
+            ডেলিভারি চার্জ
+        </button>
+
+        <button class="tab-btn"
+                onclick="switchTab('paymentSettingsTab', this)">
+            <i class="fa-solid fa-credit-card"></i>
+            পেমেন্ট সেটিংস
+        </button>
+
+        <button class="tab-btn"
+                onclick="switchTab('securityTab', this)">
+            <i class="fa-solid fa-key"></i>
+            সিকিউরিটি
+        </button>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- ১. ORDERS -->
+    <!-- ================================================= -->
+
+    <div id="ordersTab" class="tab-content active">
+
+        <div class="section-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+
+            <div>
+                <i class="fa-solid fa-list-check" style="color:#2563eb;"></i>
+                গ্রাহকদের অর্ডার তালিকা
+            </div>
+
+            <!-- অর্ডার হিস্ট্রি ও রিপোর্ট ওপেন করার বাটন -->
+            <button type="button" class="btn" onclick="toggleHistoryModal(true)" style="padding: 7px 14px; font-size: 0.8rem; background: #e0e5ec; box-shadow: 3px 3px 6px #b8bec9, -3px -3px 6px #ffffff; color: #2563eb; width: auto;">
+                <i class="fa-solid fa-chart-pie"></i> অর্ডার হিস্ট্রি ও রিপোর্ট
+            </button>
+
+        </div>
+
+        <!-- অর্ডার স্ট্যাটাস ফিল্টার ট্যাবসমূহ -->
+        <div id="orderStatusTabsContainer" style="
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 1rem;
+            scrollbar-width: none;
+            scroll-behavior: smooth;">
+
+            <button type="button" class="order-status-tab-btn active" onclick="filterOrderStatus('All', this)" style="background:#e0e5ec; border:none; padding:7px 14px; border-radius:10px; font-weight:700; color:#10b981; cursor:pointer; font-size:0.8rem; box-shadow: inset 2px 2px 4px #b8bec9, inset -2px -2px 4px #ffffff; white-space:nowrap; flex-shrink:0;">
+                সকল (<span id="countAll">0</span>)
+            </button>
+
+            <button type="button" class="order-status-tab-btn" onclick="filterOrderStatus('Pending', this)" style="background:#e0e5ec; border:none; padding:7px 14px; border-radius:10px; font-weight:700; color:#64748b; cursor:pointer; font-size:0.8rem; box-shadow: 3px 3px 6px #b8bec9, -3px -3px 6px #ffffff; white-space:nowrap; flex-shrink:0;">
+                Pending (<span id="countPending">0</span>)
+            </button>
+
+            <button type="button" class="order-status-tab-btn" onclick="filterOrderStatus('Processing', this)" style="background:#e0e5ec; border:none; padding:7px 14px; border-radius:10px; font-weight:700; color:#64748b; cursor:pointer; font-size:0.8rem; box-shadow: 3px 3px 6px #b8bec9, -3px -3px 6px #ffffff; white-space:nowrap; flex-shrink:0;">
+                Processing (<span id="countProcessing">0</span>)
+            </button>
+
+            <button type="button" class="order-status-tab-btn" onclick="filterOrderStatus('Shipped', this)" style="background:#e0e5ec; border:none; padding:7px 14px; border-radius:10px; font-weight:700; color:#64748b; cursor:pointer; font-size:0.8rem; box-shadow: 3px 3px 6px #b8bec9, -3px -3px 6px #ffffff; white-space:nowrap; flex-shrink:0;">
+                Shipped (<span id="countShipped">0</span>)
+            </button>
+
+            <button type="button" class="order-status-tab-btn" onclick="filterOrderStatus('Delivered', this)" style="background:#e0e5ec; border:none; padding:7px 14px; border-radius:10px; font-weight:700; color:#64748b; cursor:pointer; font-size:0.8rem; box-shadow: 3px 3px 6px #b8bec9, -3px -3px 6px #ffffff; white-space:nowrap; flex-shrink:0;">
+                Delivered (<span id="countDelivered">0</span>)
+            </button>
+
+            <button type="button" class="order-status-tab-btn" onclick="filterOrderStatus('Cancelled', this)" style="background:#e0e5ec; border:none; padding:7px 14px; border-radius:10px; font-weight:700; color:#64748b; cursor:pointer; font-size:0.8rem; box-shadow: 3px 3px 6px #b8bec9, -3px -3px 6px #ffffff; white-space:nowrap; flex-shrink:0;">
+                Cancelled (<span id="countCancelled">0</span>)
+            </button>
+
+        </div>
+
+        <div style="
+            display:flex;
+            gap:10px;
+            margin-bottom:1.2rem;
+            flex-wrap:wrap;">
+
+            <input type="text"
+                   id="orderSearchInput"
+                   placeholder="নাম, ফোন বা ট্র্যাকিং আইডি দিয়ে খুঁজুন..."
+                   oninput="renderOrders()"
+                   style="
+                   flex:1;
+                   min-width:200px;
+                   padding:.6rem .8rem;
+                   border-radius:10px;
+                   border:none;
+                   background-color:#e0e5ec;
+                   box-shadow:
+                   inset 3px 3px 6px #b8bec9,
+                   inset -3px -3px 6px #ffffff;
+                   outline:none;
+                   font-size:.85rem;">
+
+        </div>
+
+        <div id="adminOrdersList">
+            লোড হচ্ছে...
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- ২. PRODUCTS -->
+    <!-- ================================================= -->
+
+    <div id="productsTab" class="tab-content">
+
+        <div class="section-title">
+
+            <i class="fa-solid fa-plus-circle"
+               style="color:#10b981;">
+            </i>
+
+            নতুন প্রোডাক্ট যুক্ত করুন / এডিট করুন
+
+        </div>
+
+        <form id="productForm">
+
+            <input type="hidden"
+                   id="prodEditId">
+
+            <div class="form-group">
+
+                <label>
+                    প্রোডাক্টের নাম
+                </label>
+
+                <input type="text"
+                       id="prodName"
+                       required
+                       placeholder="যেমন: Wireless Earbuds">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    মূল্য (টাকা সহ লিখুন)
+                </label>
+
+                <input type="text"
+                       id="prodPrice"
+                       required
+                       placeholder="যেমন: ৳ ১২০০">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    স্টক পরিমাণ (সংখ্যায়)
+                </label>
+
+                <input type="number"
+                       id="prodStock"
+                       required
+                       placeholder="যেমন: 50">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    ছবি লিংক (Image URL)
+                </label>
+
+                <input type="url"
+                       id="prodImage"
+                       placeholder="https://example.com/image.jpg">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    বিবরণ (Description)
+                </label>
+
+                <textarea id="prodDesc"
+                          rows="3"
+                          placeholder="প্রোডাক্টের বিস্তারিত তথ্য...">
+                </textarea>
+
+            </div>
+
+            <button type="submit"
+                    id="prodSubmitBtn"
+                    class="btn">
+
+                <i class="fa-solid fa-save"></i>
+
+                প্রোডাক্ট সেভ করুন
+
+            </button>
+
+            <button type="button"
+                    id="prodCancelBtn"
+                    class="btn btn-danger"
+                    style="display:none; margin-top:10px;"
+                    onclick="resetProductForm()">
+
+                বাতিল
+
+            </button>
+
+        </form>
+
+
+        <div class="section-title"
+             style="margin-top:2rem;">
+
+            <i class="fa-solid fa-boxes-stacked"
+               style="color:#7c3aed;">
+            </i>
+
+            বর্তমান প্রোডাক্ট লিস্ট
+
+        </div>
+
+        <div id="adminProductsList">
+            লোড হচ্ছে...
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- ৩. SHOP SETTINGS -->
+    <!-- ================================================= -->
+
+    <div id="shopSettingsTab"
+         class="tab-content">
+
+        <div class="section-title">
+
+            <i class="fa-solid fa-store"
+               style="color:#f59e0b;">
+            </i>
+
+            শপের মূল সেটিংস
+
+        </div>
+
+        <form id="shopInfoForm">
+
+            <div class="form-group">
+
+                <label>
+                    শপের নাম (Title)
+                </label>
+
+                <input type="text"
+                       id="shopTitle"
+                       placeholder="আপনার শপের নাম">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    শপের বায়ো (Bio/Tagline)
+                </label>
+
+                <input type="text"
+                       id="shopBio"
+                       placeholder="যেমন: সেরা মানের পণ্য সেরা দামে">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    লোগো লিংক (Logo URL)
+                </label>
+
+                <input type="url"
+                       id="shopLogo"
+                       placeholder="https://example.com/logo.png">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    ব্যনার পিকচার লিংক (Banner URL)
+                </label>
+
+                <input type="url"
+                       id="shopBanner"
+                       placeholder="https://example.com/banner.jpg">
+
+            </div>
+
+
+            <div class="section-title"
+                 style="
+                 margin-top:1.5rem;
+                 border:none;">
+
+                <i class="fa-solid fa-address-card"
+                   style="color:#059669;">
+                </i>
+
+                ফুটার ও যোগাযোগের তথ্য
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    ঠিকানা
+                </label>
+
+                <input type="text"
+                       id="compAddress"
+                       placeholder="যেমন: মিরপুর ১০, ঢাকা">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    হটলাইন মোবাইল নম্বর
+                </label>
+
+                <input type="text"
+                       id="compPhone"
+                       placeholder="01700000000">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    ইমেইল
+                </label>
+
+                <input type="email"
+                       id="compEmail"
+                       placeholder="support@shop.com">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    সোশ্যাল লিংক (Facebook Page/Website)
+                </label>
+
+                <input type="url"
+                       id="compSocial"
+                       placeholder="https://facebook.com/yourpage">
+
+            </div>
+
+            <button type="submit"
+                    class="btn">
+
+                <i class="fa-solid fa-save"></i>
+
+                সেটিংস আপডেট করুন
+
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- ৪. DELIVERY -->
+    <!-- ================================================= -->
+
+    <div id="deliveryTab"
+         class="tab-content">
+
+        <div class="section-title">
+
+            <i class="fa-solid fa-truck-ramp-box"
+               style="color:#ef4444;">
+            </i>
+
+            নতুন ডেলিভারি এলাকা ও চার্জ যুক্ত করুন
+
+        </div>
+
+        <form id="deliveryForm">
+
+            <div class="form-group">
+
+                <label>
+                    এলাকার নাম
+                </label>
+
+                <input type="text"
+                       id="delAreaName"
+                       required
+                       placeholder="যেমন: ঢাকার ভিতরে / ঢাকার বাইরে">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    চার্জ (টাকায়)
+                </label>
+
+                <input type="number"
+                       id="delAreaFee"
+                       required
+                       placeholder="যেমন: 60">
+
+            </div>
+
+            <button type="submit"
+                    class="btn">
+
+                <i class="fa-solid fa-plus"></i>
+
+                চার্জ সেভ করুন
+
+            </button>
+
+        </form>
+
+
+        <div class="section-title"
+             style="margin-top:2rem;">
+
+            <i class="fa-solid fa-list-numeric"></i>
+
+            সকল ডেলিভারি চার্জেস
+
+        </div>
+
+        <div id="adminDeliveryList">
+            লোড হচ্ছে...
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- ৫. PAYMENT SETTINGS -->
+    <!-- ================================================= -->
+
+    <div id="paymentSettingsTab"
+         class="tab-content">
+
+        <div class="section-title">
+
+            <i class="fa-solid fa-credit-card"
+               style="color:#2563eb;">
+            </i>
+
+            পেমেন্ট মাধ্যম সেটিংস
+
+        </div>
+
+
+        <div class="payment-help">
+
+            <i class="fa-solid fa-circle-info"
+               style="color:#2563eb;">
+            </i>
+
+            এখান থেকে Payment Page-এ কোন কোন পেমেন্ট মাধ্যম
+            দেখাবে, কোন নম্বরে টাকা পাঠাতে হবে এবং ব্যাংক
+            পেমেন্টের তথ্য নিয়ন্ত্রণ করতে পারবেন।
+
+        </div>
+
+
+        <div class="payment-setting-card">
+
+            <div class="payment-setting-header">
+
+                <div class="payment-setting-title">
+
+                    <i class="fa-solid fa-mobile-screen-button"
+                       style="color:#e2136e;">
+                    </i>
+
+                    বিকাশ (bKash)
+
+                </div>
+
+            </div>
+
+
+            <div class="toggle-row">
+
+                <span class="toggle-label">
+                    Payment Page-এ বিকাশ চালু রাখুন
+                </span>
+
+                <label class="switch">
+
+                    <input type="checkbox"
+                           id="bKashEnabled">
+
+                    <span class="slider"></span>
+
+                </label>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    বিকাশ Personal Number
+                </label>
+
+                <input type="tel"
+                       id="bKashNumber"
+                       maxlength="11"
+                       placeholder="017xxxxxxxx">
+
+            </div>
+
+        </div>
+
+
+        <div class="payment-setting-card">
+
+            <div class="payment-setting-header">
+
+                <div class="payment-setting-title">
+
+                    <i class="fa-solid fa-mobile-screen-button"
+                       style="color:#f58220;">
+                    </i>
+
+                    নগদ (Nagad)
+
+                </div>
+
+            </div>
+
+
+            <div class="toggle-row">
+
+                <span class="toggle-label">
+                    Payment Page-এ নগদ চালু রাখুন
+                </span>
+
+                <label class="switch">
+
+                    <input type="checkbox"
+                           id="nagadEnabled">
+
+                    <span class="slider"></span>
+
+                </label>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    নগদ Personal Number
+                </label>
+
+                <input type="tel"
+                       id="nagadNumber"
+                       maxlength="11"
+                       placeholder="018xxxxxxxx">
+
+            </div>
+
+        </div>
+
+
+        <div class="payment-setting-card">
+
+            <div class="payment-setting-header">
+
+                <div class="payment-setting-title">
+
+                    <i class="fa-solid fa-building-columns"
+                       style="color:#2563eb;">
+                    </i>
+
+                    ব্যাংক পেমেন্ট
+
+                </div>
+
+            </div>
+
+
+            <div class="toggle-row">
+
+                <span class="toggle-label">
+                    Payment Page-এ ব্যাংক পেমেন্ট চালু রাখুন
+                </span>
+
+                <label class="switch">
+
+                    <input type="checkbox"
+                           id="bankEnabled">
+
+                    <span class="slider"></span>
+
+                </label>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    সরাসরি ব্যাংক ট্রান্সফারের তথ্য
+                </label>
+
+                <textarea id="bankDirectInfo"
+                          rows="5"
+                          placeholder="ব্যাংকের নাম:
+অ্যাকাউন্টের নাম:
+অ্যাকাউন্ট নম্বর:
+শাখা:
+Routing Number:
+অন্যান্য তথ্য..."></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    কার্ড ট্রান্সফারের তথ্য
+                </label>
+
+                <textarea id="bankCardInfo"
+                          rows="4"
+                          placeholder="কার্ড/গেটওয়ে পেমেন্টের প্রয়োজনীয় তথ্য লিখুন..."></textarea>
+
+            </div>
+
+        </div>
+
+
+        <div class="payment-setting-card">
+
+            <div class="payment-setting-header">
+
+                <div class="payment-setting-title">
+
+                    <i class="fa-solid fa-truck-fast"
+                       style="color:#10b981;">
+                    </i>
+
+                    Cash on Delivery (COD)
+
+                </div>
+
+            </div>
+
+
+            <div class="toggle-row">
+
+                <span class="toggle-label">
+                    Payment Page-এ COD চালু রাখুন
+                </span>
+
+                <label class="switch">
+
+                    <input type="checkbox"
+                           id="codEnabled">
+
+                    <span class="slider"></span>
+
+                </label>
+
+            </div>
+
+
+            <div class="payment-help">
+
+                COD চালু থাকলে গ্রাহক পণ্যের মূল্য
+                ডেলিভারির সময় ক্যাশে পরিশোধ করবে।
+                তবে আপনার Payment Page অনুযায়ী
+                <strong>Delivery Fee আগে অনলাইনে পরিশোধ করতে হবে।</strong>
+
+            </div>
+
+            <div style="
+                font-size:.85rem;
+                font-weight:800;
+                color:#2563eb;
+                margin-bottom:10px;">
+
+                COD Delivery Fee Payment-এর জন্য ব্যবহৃত
+                তথ্য:
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    COD-এর জন্য bKash Number
+                </label>
+
+                <input type="tel"
+                       id="codBkashNumber"
+                       maxlength="11"
+                       placeholder="ফাঁকা রাখলে মূল bKash Number ব্যবহার হবে">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    COD-এর জন্য Nagad Number
+                </label>
+
+                <input type="tel"
+                       id="codNagadNumber"
+                       maxlength="11"
+                       placeholder="ফাঁকা রাখলে মূল Nagad Number ব্যবহার হবে">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    COD-এর জন্য Bank Account Information
+                </label>
+
+                <textarea id="codBankInfo"
+                          rows="5"
+                          placeholder="ফাঁকা রাখলে মূল Direct Bank Information ব্যবহার হবে"></textarea>
+
+            </div>
+
+        </div>
+
+
+        <button type="button"
+                class="btn payment-save-btn"
+                onclick="savePaymentSettings()">
+
+            <i class="fa-solid fa-floppy-disk"></i>
+
+            সকল পেমেন্ট সেটিংস সেভ করুন
+
+        </button>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- ৬. SECURITY TAB -->
+    <!-- ================================================= -->
+
+    <div id="securityTab" class="tab-content">
+        <div class="section-title">
+            <i class="fa-solid fa-key" style="color:#2563eb;"></i>
+            সিকিউরিটি ও ফিঙ্গারপ্রিন্ট সেটিংস
+        </div>
+
+        <form id="changePasswordForm" onsubmit="handleChangePassword(event)" style="margin-bottom: 2rem;">
+            <div class="form-group">
+                <label>বর্তমান পাসওয়ার্ড:</label>
+                <input type="password" id="currentPassInput" required placeholder="বর্তমান পাসওয়ার্ড দিন">
+            </div>
+            <div class="form-group">
+                <label>নতুন পাসওয়ার্ড:</label>
+                <input type="password" id="newPassInput" required placeholder="নতুন পাসওয়ার্ড দিন">
+            </div>
+            <div class="form-group">
+                <label>নতুন পাসওয়ার্ড কনফার্ম করুন:</label>
+                <input type="password" id="confirmPassInput" required placeholder="পুনরায় নতুন পাসওয়ার্ড দিন">
+            </div>
+            <button type="submit" class="btn">
+                <i class="fa-solid fa-save"></i> পাসওয়ার্ড পরিবর্তন করুন
+            </button>
+        </form>
+
+        <div class="section-title">
+            <i class="fa-solid fa-fingerprint" style="color:#10b981;"></i>
+            ফিঙ্গারপ্রিন্ট সিকিউরিটি (পাসওয়ার্ডের মতো পার্মানেন্ট)
+        </div>
+        <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 1rem;">এই ডিভাইসে অ্যাডমিন প্যানেলের জন্য স্থায়ীভাবে ফিঙ্গারপ্রিন্ট সেটআপ বা মুছতে পারেন। একবার সেটআপ করলে পাসওয়ার্ডের মতোই সবসময় এটি কাজ করবে।</p>
+        
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button type="button" class="btn btn-primary" onclick="setupFingerprint()" style="flex: 1; min-width: 200px;">
+                <i class="fa-solid fa-shield-halved"></i> ফিঙ্গারপ্রিন্ট পার্মানেন্টলি রেজিস্টার করুন
+            </button>
+            <button type="button" class="btn btn-danger" onclick="removeFingerprint()" style="flex: 1; min-width: 200px;">
+                <i class="fa-solid fa-trash"></i> ফিঙ্গারপ্রিন্ট রিমুভ করুন
+            </button>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+
+/* ================================================= */
+/* FIREBASE CONFIG */
+/* ================================================= */
+
+const firebaseConfig = {
+
+    apiKey:
+    "AIzaSyB4t_odwE-4-Xy04VBbftdO4vL3dykK7WE",
+
+    authDomain:
+    "save-9a2b1.firebaseapp.com",
+
+    databaseURL:
+    "https://save-9a2b1-default-rtdb.firebaseio.com",
+
+    projectId:
+    "save-9a2b1",
+
+    storageBucket:
+    "save-9a2b1.firebasestorage.app",
+
+    messagingSenderId:
+    "764677352870",
+
+    appId:
+    "1:764677352870:web:64574453e074a30a843367",
+
+    measurementId:
+    "G-KV0WQWZY0H"
+
+};
+
+
+if(!firebase.apps.length){
+    firebase.initializeApp(firebaseConfig);
+}
+
+const db = firebase.database();
+
+
+/* ================================================= */
+/* GLOBAL VARIABLES */
+/* ================================================= */
+
+let globalOrders = {};
+let globalProducts = {};
+let currentOrderStatus = 'All';
+let remoteAdminPassword = null;
+
+
+/* ================================================= */
+/* AUTHENTICATION & FINGERPRINT LOGIC (FIREBASE & SECURE SYNC) */
+/* ================================================= */
+
+document.addEventListener('DOMContentLoaded', () => {
+    // ফায়ারবেস থেকে পার্মানেন্ট পাসওয়ার্ড এবং গ্লোবাল ফিঙ্গারপ্রিন্ট ক্রডেনশিয়াল আইডি লোড করা
+    db.ref('shopData/security').on('value', snapshot => {
+        const secData = snapshot.val() || {};
+        remoteAdminPassword = secData.adminPassword;
+        window.remoteFingerprintCredentialId = secData.fingerprintCredentialId || null;
+        checkInitialAuthSetup();
+    });
+    
+    const initialActiveBtn = document.querySelector('.tab-btn.active');
+    if(initialActiveBtn){
+        updateGliderPosition(initialActiveBtn);
+    }
+    loadPaymentSettings();
+});
+
+function checkInitialAuthSetup(){
+    const localCredId = localStorage.getItem('admin_fingerprint_cred_id');
+    
+    // যদি ফায়ারবেসে গ্লোবাল ফিঙ্গারপ্রিন্ট আইডি থাকে কিন্তু লোকালstorage এ না থাকে, তবে সিঙ্ক করে নেওয়া
+    if(window.remoteFingerprintCredentialId && !localCredId){
+        localStorage.setItem('admin_fingerprint_cred_id', window.remoteFingerprintCredentialId);
+    }
+
+    const activeCredId = localStorage.getItem('admin_fingerprint_cred_id');
+
+    if(!remoteAdminPassword){
+        document.getElementById('authTitle').innerHTML = `<i class="fa-solid fa-user-plus"></i> প্রথমবার পাসওয়ার্ড তৈরি করুন`;
+        document.getElementById('authDesc').innerText = `আপনার ড্যাশবোর্ডের সুরক্ষার জন্য একটি নতুন পাসওয়ার্ড সেট করুন।`;
+        document.getElementById('authInputLabel').innerText = `নতুন পাসওয়ার্ড তৈরি করুন:`;
+        document.getElementById('authSubmitBtn').innerHTML = `<i class="fa-solid fa-check"></i> পাসওয়ার্ড সেট করুন`;
+    } else {
+        document.getElementById('authTitle').innerHTML = `<i class="fa-solid fa-lock"></i> এডমিন প্যানেল সিকিউরিটি`;
+        document.getElementById('authDesc').innerText = `দয়া করে আপনার পাসওয়ার্ড দিন অথবা ফিঙ্গারপ্রিন্ট ব্যবহার করুন।`;
+        document.getElementById('authInputLabel').innerText = `পাসওয়ার্ড লিখুন:`;
+        document.getElementById('authSubmitBtn').innerHTML = `<i class="fa-solid fa-arrow-right-to-bracket"></i> প্রবেশ করুন`;
+
+        // সব জায়গা থেকে কাজ করার জন্য এবং পাসওয়ার্ডের মতো পার্মানেন্ট রাখতে গ্লোবাল/লোকাল ফিঙ্গারপ্রিন্ট আইডি চেক করা হচ্ছে
+        if(window.PublicKeyCredential && (activeCredId || window.remoteFingerprintCredentialId)){
+            document.getElementById('fingerprintBtn').style.display = 'inline-flex';
+        } else {
+            document.getElementById('fingerprintBtn').style.display = 'none';
+        }
+
+        // সিকিউরিটি ট্যাবে বা লগইন স্ক্রিনে সেটআপ বাটন হ্যান্ডেল করা
+        if(window.PublicKeyCredential && !activeCredId && !window.remoteFingerprintCredentialId){
+            document.getElementById('setupFingerprintBtn').style.display = 'inline-flex';
+        } else {
+            document.getElementById('setupFingerprintBtn').style.display = 'none';
+        }
+    }
+
+    if(sessionStorage.getItem('admin_logged_in') === 'true'){
+        document.getElementById('authScreen').style.display = 'none';
+    }
+}
+
+async function handleAuthSubmit(e){
+    e.preventDefault();
+    const inputVal = document.getElementById('authPasswordInput').value.trim();
+
+    if(!remoteAdminPassword){
+        if(inputVal.length < 4){
+            showToast('পাসওয়ার্ড অন্তত ৪ অক্ষরের হতে হবে!');
+            return;
+        }
+        // ফায়ারবেসে পার্মানেন্ট পাসওয়ার্ড সেভ করা
+        db.ref('shopData/security').update({ adminPassword: inputVal }).then(() => {
+            showToast('পাসওয়ার্ড সফলভাবে সেট হয়েছে!');
+            document.getElementById('authScreen').style.display = 'none';
+            sessionStorage.setItem('admin_logged_in', 'true');
+            document.getElementById('authForm').reset();
+        });
+    } else {
+        if(inputVal === remoteAdminPassword){
+            sessionStorage.setItem('admin_logged_in', 'true');
+            document.getElementById('authScreen').style.display = 'none';
+            showToast('সফলভাবে লগইন হয়েছে!');
+            document.getElementById('authForm').reset();
+        } else {
+            showToast('ভুল পাসওয়ার্ড!');
+        }
+    }
+}
+
+function logoutAdmin(){
+    sessionStorage.removeItem('admin_logged_in');
+    document.getElementById('authScreen').style.display = 'flex';
+    checkInitialAuthSetup();
+}
+
+// বেসসিট কনভার্শন হেল্পার ফাংশন WebAuthn বাইনারি আইডির জন্য
+function bufferToBase64(buffer) {
+    const bytes = new Uint8Array(buffer);
+    let binary = '';
+    for (let i = 0; i < bytes.byteLength; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return window.btoa(binary);
+}
+
+function base64ToBuffer(base64) {
+    const binary_string = window.atob(base64);
+    const len = binary_string.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+        bytes[i] = binary_string.charCodeAt(i);
+    }
+    return bytes.buffer;
+}
+
+async function setupFingerprint(){
+    if(!window.PublicKeyCredential){
+        showToast('আপনার ব্রাউজার ফিঙ্গারপ্রিন্ট সাপোর্ট করে না!');
+        return;
+    }
+
+    try {
+        const challenge = new Uint8Array(32);
+        window.crypto.getRandomValues(challenge);
+
+        const publicKeyCredentialCreationOptions = {
+            challenge: challenge,
+            rp: {
+                name: "Online Shop Admin Dashboard",
+                id: window.location.hostname,
+            },
+            user: {
+                id: Uint8Array.from("ADMIN_SECURE_USER_ID", c => c.charCodeAt(0)),
+                name: "admin@onlineshop.com",
+                displayName: "Shop Admin Master",
+            },
+            pubKeyCredParams: [{ alg: -7, type: "public-key" }, { alg: -257, type: "public-key" }],
+            authenticatorSelection: {
+                authenticatorAttachment: "platform",
+                userVerification: "required",
+                residentKey: "preferred"
+            },
+            timeout: 60000,
+            attestation: "none"
+        };
+
+        const credential = await navigator.credentials.create({
+            publicKey: publicKeyCredentialCreationOptions
+        });
+
+        if(credential){
+            const credIdB64 = bufferToBase64(credential.rawId);
+            
+            // লোকাল এবং ক্লাউড (ফায়ারবেস) উভয় জায়গায় পার্মানেন্ট আইডি সেভ করা হলো যাতে সব জায়গা থেকে পাসওয়ার্ডের মতো কাজ করে কখনো পরিবর্তন না হয়
+            localStorage.setItem('admin_fingerprint_cred_id', credIdB64);
+            await db.ref('shopData/security').update({ fingerprintCredentialId: credIdB64 });
+
+            showToast('ফিঙ্গারপ্রিন্ট পার্মানেন্টলি সেটআপ হয়েছে!');
+            checkInitialAuthSetup();
+        }
+    } catch(err) {
+        console.error(err);
+        showToast('ফিঙ্গারপ্রিন্ট সেটআপ বাতিল বা ব্যর্থ হয়েছে!');
+    }
+}
+
+async function loginWithFingerprint(){
+    if(!window.PublicKeyCredential) return;
+
+    try {
+        const activeCredIdB64 = localStorage.getItem('admin_fingerprint_cred_id') || window.remoteFingerprintCredentialId;
+        if(!activeCredIdB64){
+            showToast('এই ডিভাইসে কোনো ফিঙ্গারপ্রিন্ট রেজিস্টার্ড নেই!');
+            return;
+        }
+
+        const challenge = new Uint8Array(32);
+        window.crypto.getRandomValues(challenge);
+
+        const publicKeyCredentialRequestOptions = {
+            challenge: challenge,
+            timeout: 60000,
+            userVerification: "required",
+            allowCredentials: [{
+                id: base64ToBuffer(activeCredIdB64),
+                type: "public-key",
+                transports: ["internal"]
+            }]
+        };
+
+        const assertion = await navigator.credentials.get({
+            publicKey: publicKeyCredentialRequestOptions
+        });
+
+        if(assertion){
+            sessionStorage.setItem('admin_logged_in', 'true');
+            document.getElementById('authScreen').style.display = 'none';
+            showToast('ফিঙ্গারপ্রিন্ট দিয়ে লগইন সফল হয়েছে!');
+        }
+    } catch(err) {
+        console.error(err);
+        showToast('ফিঙ্গারপ্রিন্ট যাচাই ব্যর্থ হয়েছে!');
+    }
+}
+
+async function removeFingerprint(){
+    if(confirm('আপনি কি এই ডিভাইসের ফিঙ্গারপ্রিন্ট সিকিউরিটি রিমুভ করতে চান?')){
+        localStorage.removeItem('admin_fingerprint_cred_id');
+        await db.ref('shopData/security').update({ fingerprintCredentialId: null });
+        showToast('ফিঙ্গারপ্রিন্ট সফলভাবে রিমুভ করা হয়েছে!');
+        checkInitialAuthSetup();
+    }
+}
+
+function handleChangePassword(e){
+    e.preventDefault();
+    const currentPass = document.getElementById('currentPassInput').value.trim();
+    const newPass = document.getElementById('newPassInput').value.trim();
+    const confirmPass = document.getElementById('confirmPassInput').value.trim();
+
+    if(currentPass !== remoteAdminPassword){
+        showToast('বর্তমান পাসওয়ার্ড সঠিক নয়!');
+        return;
+    }
+
+    if(newPass.length < 4){
+        showToast('নতুন পাসওয়ার্ড অন্তত ৪ অক্ষরের হতে হবে!');
+        return;
+    }
+
+    if(newPass !== confirmPass){
+        showToast('নতুন পাসওয়ার্ড ও কনফার্ম পাসওয়ার্ড মেলেনি!');
+        return;
+    }
+
+    // ফায়ারবেসে নতুন পাসওয়ার্ড আপডেট করা
+    db.ref('shopData/security').update({ adminPassword: newPass }).then(() => {
+        showToast('পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে!');
+        document.getElementById('changePasswordForm').reset();
+    });
+}
+
+
+/* ================================================= */
+/* TOAST */
+/* ================================================= */
+
+function showToast(msg){
+    const toast = document.getElementById('toastBox');
+    document.getElementById('toastMsg').innerText = msg;
+    toast.classList.add('show');
+    setTimeout(()=>{
+        toast.classList.remove('show');
+    },2500);
+}
+
+
+/* ================================================= */
+/* MODAL CONTROL */
+/* ================================================= */
+
+function toggleHistoryModal(open){
+    const modal = document.getElementById('orderHistoryModal');
+    if(open){
+        modal.classList.add('show');
+        renderOrderHistory();
+    } else {
+        modal.classList.remove('show');
+    }
+}
+
+
+/* ================================================= */
+/* ORDER HISTORY & REPORT LOGIC */
+/* ================================================= */
+
+function renderOrderHistory(){
+    const rangeSelect = document.getElementById('historyTimeRange').value;
+    const listContainer = document.getElementById('historyOrdersListContainer');
+    
+    let deliveredCount = 0;
+    let deliveredTotalAmt = 0;
+    let cancelledCount = 0;
+    let cancelledTotalAmt = 0;
+
+    const now = new Date();
+    let cutoffDate = null;
+
+    if(rangeSelect !== 'all'){
+        const months = parseInt(rangeSelect);
+        cutoffDate = new Date();
+        cutoffDate.setMonth(now.getMonth() - months);
+    }
+
+    let historyHtml = '';
+    const orderKeys = Object.keys(globalOrders).reverse();
+
+    orderKeys.forEach(key => {
+        const ord = globalOrders[key];
+        const status = ord.status || 'Pending';
+
+        if(status !== 'Delivered' && status !== 'Cancelled') return;
+
+        let orderDate = ord.timestamp ? new Date(ord.timestamp) : null;
+        if(!orderDate && ord.orderTime){
+            const parsed = Date.parse(ord.orderTime);
+            if(!isNaN(parsed)) orderDate = new Date(parsed);
+        }
+
+        if(cutoffDate && orderDate && orderDate < cutoffDate){
+            return;
+        }
+
+        const totalStr = String(ord.totalAmount || '0');
+        const numAmt = parseFloat(totalStr.replace(/[^0-9.]/g, '')) || 0;
+
+        if(status === 'Delivered'){
+            deliveredCount++;
+            deliveredTotalAmt += numAmt;
+        } else if(status === 'Cancelled'){
+            cancelledCount++;
+            cancelledTotalAmt += numAmt;
+        }
+
+        const statusBadge = status === 'Delivered' 
+            ? `<span style="background:#10b981; color:#fff; padding:2px 8px; border-radius:6px; font-size:0.7rem; font-weight:bold;">Delivered</span>`
+            : `<span style="background:#ef4444; color:#fff; padding:2px 8px; border-radius:6px; font-size:0.7rem; font-weight:bold;">Cancelled</span>`;
+
+        historyHtml += `
+        <div style="background: rgba(184,190,201,0.2); padding: 10px 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 0.85rem;">
+            <div>
+                <strong style="color:#2563eb;">${ord.trackingId || key}</strong> - 
+                <span style="color:#334155; font-weight:600;">${ord.customerName || 'N/A'}</span>
+                <div style="font-size: 0.75rem; color:#64748b;">${ord.orderTime || ''}</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-weight: 800; color:#1e293b;">${ord.totalAmount || '0'}</span>
+                ${statusBadge}
+            </div>
+        </div>
+        `;
+    });
+
+    document.getElementById('historyDeliveredCount').innerText = `${deliveredCount} টি`;
+    document.getElementById('historyDeliveredTotal').innerText = `৳ ${deliveredTotalAmt}`;
+    document.getElementById('historyCancelledCount').innerText = `${cancelledCount} টি`;
+    document.getElementById('historyCancelledTotal').innerText = `৳ ${cancelledTotalAmt}`;
+
+    if(historyHtml === ''){
+        listContainer.innerHTML = '<p style="color:#64748b; font-size:0.85rem; text-align:center; padding: 10px;">এই সময়ে কোনো হিস্ট্রি পাওয়া যায়নি।</p>';
+    } else {
+        listContainer.innerHTML = historyHtml;
+    }
+}
+
+
+/* ================================================= */
+/* COPY TEXT FUNCTION */
+/* ================================================= */
+
+function copyToClipboard(text, label = 'টেক্সট') {
+    if (!text || text === 'N/A') {
+        showToast('কপি করার মতো কিছু নেই!');
+        return;
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+            showToast(`${label} কপি হয়েছে!`);
+        }).catch(err => {
+            fallbackCopy(text, label);
+        });
+    } else {
+        fallbackCopy(text, label);
+    }
+}
+
+function fallbackCopy(text, label) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.opacity = "0";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            showToast(`${label} কপি হয়েছে!`);
+        } else {
+            showToast('কপি করা যায়নি!');
+        }
+    } catch (err) {
+        showToast('কপি করা যায়নি!');
+    }
+    document.body.removeChild(textArea);
+}
+
+
+/* ================================================= */
+/* TAB SWITCH */
+/* ================================================= */
+
+function switchTab(tabId, btnElem){
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+    document.getElementById(tabId).classList.add('active');
+    btnElem.classList.add('active');
+
+    updateGliderPosition(btnElem);
+    centerTab(btnElem);
+}
+
+function centerTab(selectedTab){
+    const container = document.getElementById('navTabsContainer');
+    if(!container || !selectedTab) return;
+
+    const containerWidth = container.clientWidth;
+    const tabWidth = selectedTab.offsetWidth;
+    const tabLeft = selectedTab.offsetLeft;
+    const targetScrollLeft = tabLeft - (containerWidth / 2) + (tabWidth / 2);
+
+    container.scrollTo({
+        left: Math.max(0, targetScrollLeft),
+        behavior: 'smooth'
+    });
+}
+
+function centerOrderStatusTab(selectedTab){
+    const container = document.getElementById('orderStatusTabsContainer');
+    if(!container || !selectedTab) return;
+
+    const containerWidth = container.clientWidth;
+    const tabWidth = selectedTab.offsetWidth;
+    const tabLeft = selectedTab.offsetLeft;
+    const targetScrollLeft = tabLeft - (containerWidth / 2) + (tabWidth / 2);
+
+    container.scrollTo({
+        left: Math.max(0, targetScrollLeft),
+        behavior: 'smooth'
+    });
+}
+
+function updateGliderPosition(activeBtn){
+    const glider = document.getElementById('navGlider');
+    if(!activeBtn || !glider) return;
+
+    glider.style.width = `${activeBtn.offsetWidth}px`;
+    glider.style.height = `${activeBtn.offsetHeight}px`;
+    glider.style.transform = `translateX(${activeBtn.offsetLeft}px)`;
+}
+
+window.addEventListener('resize', ()=>{
+    const currentActiveBtn = document.querySelector('.tab-btn.active');
+    if(currentActiveBtn){
+        updateGliderPosition(currentActiveBtn);
+    }
+});
+
+
+/* ================================================= */
+/* PAYMENT SETTINGS LOAD & SAVE */
+/* ================================================= */
+
+function loadPaymentSettings(){
+    db.ref('shopData/paymentSettings').on('value', snapshot=>{
+        const settings = snapshot.val() || {};
+        document.getElementById('bKashEnabled').checked = settings.bKashEnabled !== false;
+        document.getElementById('nagadEnabled').checked = settings.nagadEnabled !== false;
+        document.getElementById('bankEnabled').checked = settings.bankEnabled !== false;
+        document.getElementById('codEnabled').checked = settings.codEnabled !== false;
+        document.getElementById('bKashNumber').value = settings.bKashNumber || settings.bKash || '';
+        document.getElementById('nagadNumber').value = settings.nagadNumber || settings.Nagad || '';
+        document.getElementById('bankDirectInfo').value = settings.bankDirectInfo || settings.bankAccount || '';
+        document.getElementById('bankCardInfo').value = settings.bankCardInfo || '';
+        document.getElementById('codBkashNumber').value = settings.codBkashNumber || '';
+        document.getElementById('codNagadNumber').value = settings.codNagadNumber || '';
+        document.getElementById('codBankInfo').value = settings.codBankInfo || '';
+    });
+}
+
+function savePaymentSettings(){
+    const bKashNumber = document.getElementById('bKashNumber').value.trim();
+    const nagadNumber = document.getElementById('nagadNumber').value.trim();
+    const bankDirectInfo = document.getElementById('bankDirectInfo').value.trim();
+    const bankCardInfo = document.getElementById('bankCardInfo').value.trim();
+    const codBkashNumber = document.getElementById('codBkashNumber').value.trim();
+    const codNagadNumber = document.getElementById('codNagadNumber').value.trim();
+    const codBankInfo = document.getElementById('codBankInfo').value.trim();
+
+    const paymentSettings = {
+        bKashEnabled: document.getElementById('bKashEnabled').checked,
+        bKashNumber: bKashNumber,
+        nagadEnabled: document.getElementById('nagadEnabled').checked,
+        nagadNumber: nagadNumber,
+        bankEnabled: document.getElementById('bankEnabled').checked,
+        bankDirectInfo: bankDirectInfo,
+        bankCardInfo: bankCardInfo,
+        codEnabled: document.getElementById('codEnabled').checked,
+        codBkashNumber: codBkashNumber,
+        codNagadNumber: codNagadNumber,
+        codBankInfo: codBankInfo
+    };
+
+    db.ref('shopData/paymentSettings').update(paymentSettings).then(()=>{
+        showToast('পেমেন্ট সেটিংস সফলভাবে আপডেট হয়েছে!');
+    }).catch(error=>{
+        showToast('পেমেন্ট সেটিংস সেভ করা যায়নি!');
+    });
+}
+
+
+/* ================================================= */
+/* ORDERS */
+/* ================================================= */
+
+db.ref('orders').on('value', snapshot=>{
+    globalOrders = snapshot.val() || {};
+    renderOrders();
+});
+
+function filterOrderStatus(status, btnElem){
+    currentOrderStatus = status;
+    document.querySelectorAll('.order-status-tab-btn').forEach(btn => {
+        btn.style.color = '#64748b';
+        btn.style.boxShadow = '3px 3px 6px #b8bec9, -3px -3px 6px #ffffff';
+    });
+    btnElem.style.color = '#10b981';
+    btnElem.style.boxShadow = 'inset 2px 2px 4px #b8bec9, inset -2px -2px 4px #ffffff';
+
+    centerOrderStatusTab(btnElem);
+    renderOrders();
+}
+
+function renderOrders(){
+    const listContainer = document.getElementById('adminOrdersList');
+    const searchQuery = document.getElementById('orderSearchInput').value.toLowerCase().trim();
+
+    let counts = { All: 0, Pending: 0, Processing: 0, Shipped: 0, Delivered: 0, Cancelled: 0 };
+
+    Object.keys(globalOrders).forEach(key => {
+        const status = globalOrders[key].status || 'Pending';
+        counts.All++;
+        if (counts[status] !== undefined) {
+            counts[status]++;
+        }
+    });
+
+    document.getElementById('countAll').innerText = counts.All;
+    document.getElementById('countPending').innerText = counts.Pending;
+    document.getElementById('countProcessing').innerText = counts.Processing;
+    document.getElementById('countShipped').innerText = counts.Shipped;
+    document.getElementById('countDelivered').innerText = counts.Delivered;
+    document.getElementById('countCancelled').innerText = counts.Cancelled;
+
+    if(!Object.keys(globalOrders).length){
+        listContainer.innerHTML = '<p style="color:#64748b;font-size:.9rem;text-align:center;">কোনো অর্ডার নেই।</p>';
+        return;
+    }
+
+    let html = '';
+    const orderKeys = Object.keys(globalOrders).reverse();
+    let matchCount = 0;
+
+    orderKeys.forEach(key=>{
+        const ord = globalOrders[key];
+        const trackingId = (ord.trackingId || key).toLowerCase();
+        const customerName = (ord.customerName || '').toLowerCase();
+        const customerPhone = (ord.customerPhone || '').toLowerCase();
+        const status = ord.status || 'Pending';
+
+        const matchesSearch = trackingId.includes(searchQuery) || customerName.includes(searchQuery) || customerPhone.includes(searchQuery);
+        const matchesStatus = currentOrderStatus === 'All' || status === currentOrderStatus;
+
+        if(matchesSearch && matchesStatus){
+            matchCount++;
+            let paymentTypeBadge = '';
+            let codPaymentSummary = '';
+            const methodLower = (ord.paymentMethod || '').toLowerCase();
+            
+            if (methodLower.includes('cod') || methodLower.includes('cash on delivery')) {
+                paymentTypeBadge = `<span style="background:#f59e0b; color:#fff; padding:3px 9px; border-radius:6px; font-size:0.75rem; font-weight:bold; display:inline-block; margin-top:4px;"><i class="fa-solid fa-truck-fast"></i> COD (শুধুমাত্র ডেলিভারি চার্জ পেমেন্ট)</span>`;
+                
+                const totalAmountStr = String(ord.totalAmount || '0');
+                const deliveryFeeStr = String(ord.deliveryFee || '0');
+                const totalNum = parseFloat(totalAmountStr.replace(/[^0-9.]/g, '')) || 0;
+                const deliveryNum = parseFloat(deliveryFeeStr.replace(/[^0-9.]/g, '')) || 0;
+                const dueNum = Math.max(0, totalNum - deliveryNum);
+                
+                codPaymentSummary = `
+                <div style="margin-top:8px; padding:12px; background:#e0e5ec; border-radius:12px; box-shadow: inset 3px 3px 6px #b8bec9, inset -3px -3px 6px #ffffff; font-size:0.85rem; display:flex; flex-direction:column; gap:8px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; background: rgba(16, 185, 129, 0.12); padding: 8px 10px; border-radius: 8px;">
+                        <span style="color:#065f46; font-weight:700;"><i class="fa-solid fa-circle-check" style="color:#10b981;"></i> পরিশোধিত (ডেলিভারি চার্জ):</span>
+                        <span style="color:#065f46; font-weight:800; font-size:0.95rem;">৳ ${deliveryNum}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; background: rgba(239, 68, 68, 0.12); padding: 8px 10px; border-radius: 8px;">
+                        <span style="color:#991b1b; font-weight:700;"><i class="fa-solid fa-circle-exclamation" style="color:#ef4444;"></i> বকেয়া (ক্যাশ অন ডেলিভারি):</span>
+                        <span style="color:#991b1b; font-weight:800; font-size:0.95rem;">৳ ${dueNum}</span>
+                    </div>
+                </div>`;
+            } else {
+                paymentTypeBadge = `<span style="background:#10b981; color:#fff; padding:3px 9px; border-radius:6px; font-size:0.75rem; font-weight:bold; display:inline-block; margin-top:4px;"><i class="fa-solid fa-circle-check"></i> সম্পূর্ণ পেমেন্ট (Full Paid)</span>`;
+            }
+
+            let rawDetails = ord.paymentDetails || '';
+            let parsedTrxId = rawDetails;
+            let parsedSender = '';
+
+            if (rawDetails.includes('Sender:') || rawDetails.includes('TrxID:')) {
+                const senderMatch = rawDetails.match(/Sender:\s*([^,]+)/);
+                const trxMatch = rawDetails.match(/TrxID:\s*([^,\]]+)/);
+                if (senderMatch) parsedSender = senderMatch[1].trim();
+                if (trxMatch) parsedTrxId = trxMatch[1].trim();
+            }
+
+            html += `
+            <div class="data-card" style="padding:0; overflow:hidden; margin-bottom:1.2rem; flex-direction:column; align-items:stretch; gap:0;">
+                <div style="background:rgba(184,190,201,.25); padding:10px 14px; width:100%; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(184,190,201,.4);">
+                    <span style="color:#2563eb; font-weight:800; font-size:.9rem;"><i class="fa-solid fa-hashtag"></i> ${ord.trackingId || key}</span>
+                    <span style="font-size:.75rem; color:#64748b; font-weight:600;"><i class="fa-regular fa-clock"></i> ${ord.orderTime || ''}</span>
+                </div>
+
+                <div style="padding:12px 14px; width:100%; display:flex; flex-direction:column; gap:6px; font-size:.88rem;">
+                    <div><strong style="color:#334155;"><i class="fa-solid fa-box" style="color:#10b981;"></i> প্রোডাক্ট:</strong> ${ord.productName || 'N/A'} <span style="background:#cbd5e1; padding:2px 6px; border-radius:6px; font-size:.75rem; font-weight:bold; margin-left:4px;">${ord.quantity || 1} টি</span> <span style="color:#10b981; font-weight:800; margin-left: 8px;">(${ord.price || '0'})</span></div>
+                    <div><strong style="color:#334155;"><i class="fa-solid fa-user" style="color:#6366f1;"></i> গ্রাহক:</strong> ${ord.customerName || 'N/A'}</div>
+                    <div><strong style="color:#334155;"><i class="fa-solid fa-phone" style="color:#059669;"></i> ফোন:</strong> <a href="tel:${ord.customerPhone}" style="color:#059669; text-decoration:none; font-weight:bold;">${ord.customerPhone || 'N/A'}</a></div>
+                    <div><strong style="color:#334155;"><i class="fa-solid fa-location-dot" style="color:#ef4444;"></i> ঠিকানা:</strong> ${ord.customerAddress || 'N/A'}</div>
+                    <div><strong style="color:#334155;"><i class="fa-solid fa-truck" style="color:#f59e0b;"></i> ডেলিভারি এলাকা:</strong> ${ord.deliveryArea || 'N/A'} <small style="color:#64748b;">(${ord.deliveryFee || '0'})</small></div>
+
+                    <div style="margin-top:4px; padding-top:6px; border-top:1px dashed rgba(184,190,201,.6); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;">
+                        <div><strong style="color:#334155;"><i class="fa-solid fa-receipt" style="color:#d97706;"></i> মোট বিল:</strong> <span style="color:#10b981; font-weight:800;">${ord.totalAmount || '0'}</span></div>
+                        <div>${paymentTypeBadge}</div>
+                    </div>
+                    ${codPaymentSummary}
+
+                    <div style="margin-top:8px; padding-top:10px; border-top:1px dashed rgba(184,190,201,.6); display:flex; flex-direction:column; gap:8px;">
+                        <div style="font-weight:700; color:#1e293b; font-size:0.88rem;"><i class="fa-solid fa-credit-card" style="color:#2563eb;"></i> পেমেন্টের তথ্য:</div>
+                        <div style="background: rgba(16, 185, 129, 0.06); padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(16, 185, 129, 0.2); display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem;">
+                            <div><strong style="color:#475569;">মাধ্যম:</strong> <span style="color:#2563eb; font-weight:700;">${ord.paymentMethod || 'N/A'}</span></div>
+                            ${rawDetails ? `
+                                ${parsedSender ? `
+                                <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                                    <div><strong style="color:#475569;">প্রেরক নম্বর:</strong> <span style="color:#059669; font-weight:bold;">${parsedSender}</span></div>
+                                    <button type="button" onclick="copyToClipboard('${parsedSender}', 'প্রেরক নম্বর')" style="background:#e0e5ec; border:none; padding:3px 8px; border-radius:6px; font-size:0.75rem; font-weight:bold; color:#059669; cursor:pointer;"><i class="fa-regular fa-copy"></i> কপি</button>
+                                </div>` : ''}
+                                <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                                    <div><strong style="color:#475569;">ট্রানজেকশন আইডি:</strong> <span style="color:#1e293b; font-weight:bold;">${parsedTrxId}</span></div>
+                                    <button type="button" onclick="copyToClipboard('${parsedTrxId}', 'ট্রানজেকশন আইডি')" style="background:#e0e5ec; border:none; padding:3px 8px; border-radius:6px; font-size:0.75rem; font-weight:bold; color:#2563eb; cursor:pointer;"><i class="fa-regular fa-copy"></i> কপি</button>
+                                </div>` : ''}
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background:rgba(184,190,201,.15); padding:8px 14px; width:100%; display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(184,190,201,.3);">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <label style="font-size:.8rem; font-weight:bold; color:#475569;">স্ট্যাটাস:</label>
+                        <select class="status-select" onchange="updateOrderStatus('${key}', this.value)" style="padding:4px 8px;">
+                            <option value="Pending" ${status === 'Pending' ? 'selected' : ''}>Pending</option>
+                            <option value="Processing" ${status === 'Processing' ? 'selected' : ''}>Processing</option>
+                            <option value="Shipped" ${status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                            <option value="Delivered" ${status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                            <option value="Cancelled" ${status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-danger" style="padding:6px 10px; font-size:.75rem; border-radius:8px; width:auto;" onclick="deleteOrder('${key}')"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </div>`;
+        }
+    });
+
+    if(matchCount === 0){
+        listContainer.innerHTML = '<p style="color:#64748b;font-size:.9rem;text-align:center;">কোনো ফলাফল পাওয়া যায়নি।</p>';
+    } else {
+        listContainer.innerHTML = html;
+    }
+}
+
+function updateOrderStatus(orderId, newStatus){
+    db.ref(`orders/${orderId}`).update({ status: newStatus }).then(()=>{
+        showToast('অর্ডার স্টেটাস আপডেট করা হয়েছে');
+    });
+}
+
+function deleteOrder(orderId){
+    if(confirm('অর্ডারটি মুছে ফেলতে চান?')){
+        db.ref(`orders/${orderId}`).remove().then(()=>{
+            showToast('অর্ডার মুছে ফেলা হয়েছে');
+        });
+    }
+}
+
+
+/* ================================================= */
+/* PRODUCTS */
+/* ================================================= */
+
+db.ref('shopData/products').on('value', snapshot=>{
+    globalProducts = snapshot.val() || {};
+    const listContainer = document.getElementById('adminProductsList');
+
+    if(!Object.keys(globalProducts).length){
+        listContainer.innerHTML = '<p style="color:#64748b;font-size:.9rem;">কোনো প্রোডাক্ট পাওয়া যায়নি।</p>';
+        return;
+    }
+
+    let html = '';
+    Object.keys(globalProducts).forEach(key=>{
+        const p = globalProducts[key];
+        html += `
+            <div class="data-card" style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <img src="${p.image || 'https://via.placeholder.com/50'}" alt="${p.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;">
+                    <div>
+                        <strong>${p.name}</strong><br>
+                        <span style="color:#10b981; font-weight:bold;">${p.price}</span> | <span>স্টক: ${p.stock}</span>
+                    </div>
+                </div>
+                <div style="display:flex; gap:6px;">
+                    <button type="button" class="btn btn-primary" style="padding:6px 10px; font-size:.8rem; width:auto;" onclick="editProduct('${key}')"><i class="fa-solid fa-pen"></i></button>
+                    <button type="button" class="btn btn-danger" style="padding:6px 10px; font-size:.8rem; width:auto;" onclick="deleteProduct('${key}')"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </div>`;
+    });
+    listContainer.innerHTML = html;
+});
+
+document.getElementById('productForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const editId = document.getElementById('prodEditId').value;
+    const prodData = {
+        name: document.getElementById('prodName').value.trim(),
+        price: document.getElementById('prodPrice').value.trim(),
+        stock: parseInt(document.getElementById('prodStock').value),
+        image: document.getElementById('prodImage').value.trim(),
+        description: document.getElementById('prodDesc').value.trim()
+    };
+
+    if(editId){
+        db.ref(`shopData/products/${editId}`).update(prodData).then(()=>{
+            showToast('প্রোডাক্ট আপডেট হয়েছে');
+            resetProductForm();
+        });
+    } else {
+        db.ref('shopData/products').push(prodData).then(()=>{
+            showToast('নতুন প্রোডাক্ট যুক্ত হয়েছে');
+            resetProductForm();
+        });
+    }
+});
+
+function editProduct(id){
+    const p = globalProducts[id];
+    if(!p) return;
+
+    document.getElementById('prodEditId').value = id;
+    document.getElementById('prodName').value = p.name || '';
+    document.getElementById('prodPrice').value = p.price || '';
+    document.getElementById('prodStock').value = p.stock || 0;
+    document.getElementById('prodImage').value = p.image || '';
+    document.getElementById('prodDesc').value = p.description || '';
+    document.getElementById('prodSubmitBtn').innerHTML = `<i class="fa-solid fa-sync"></i> আপডেট করুন`;
+    document.getElementById('prodCancelBtn').style.display = 'inline-flex';
+
+    window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function resetProductForm(){
+    document.getElementById('productForm').reset();
+    document.getElementById('prodEditId').value = '';
+    document.getElementById('prodSubmitBtn').innerHTML = `<i class="fa-solid fa-save"></i> প্রোডাক্ট সেভ করুন`;
+    document.getElementById('prodCancelBtn').style.display = 'none';
+}
+
+function deleteProduct(id){
+    if(confirm('প্রোডাক্টটি ডিলিট নিশ্চিত করুন')){
+        db.ref(`shopData/products/${id}`).remove().then(()=>{
+            showToast('প্রোডাক্ট ডিলিট হয়েছে');
+        });
+    }
+}
+
+
+/* ================================================= */
+/* SHOP SETTINGS */
+/* ================================================= */
+
+db.ref('shopData').once('value', snapshot=>{
+    const data = snapshot.val();
+    if(!data) return;
+
+    if(data.title) document.getElementById('shopTitle').value = data.title;
+    if(data.bio) document.getElementById('shopBio').value = data.bio;
+    if(data.logo) document.getElementById('shopLogo').value = data.logo;
+    if(data.banner) document.getElementById('shopBanner').value = data.banner;
+    if(data.company){
+        if(data.company.address) document.getElementById('compAddress').value = data.company.address;
+        if(data.company.phone) document.getElementById('compPhone').value = data.company.phone;
+        if(data.company.email) document.getElementById('compEmail').value = data.company.email;
+        if(data.company.social) document.getElementById('compSocial').value = data.company.social;
+    }
+});
+
+document.getElementById('shopInfoForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const shopUpdate = {
+        title: document.getElementById('shopTitle').value.trim(),
+        bio: document.getElementById('shopBio').value.trim(),
+        logo: document.getElementById('shopLogo').value.trim(),
+        banner: document.getElementById('shopBanner').value.trim(),
+        company: {
+            address: document.getElementById('compAddress').value.trim(),
+            phone: document.getElementById('compPhone').value.trim(),
+            email: document.getElementById('compEmail').value.trim(),
+            social: document.getElementById('compSocial').value.trim()
+        }
+    };
+
+    db.ref('shopData').update(shopUpdate).then(()=>{
+        showToast('শপ সেটিংস আপডেট সম্পন্ন!');
+    });
+});
+
+
+/* ================================================= */
+/* DELIVERY CHARGES */
+/* ================================================= */
+
+db.ref('shopData/deliveryCharges').on('value', snapshot=>{
+    const listContainer = document.getElementById('adminDeliveryList');
+    const charges = snapshot.val();
+
+    if(!charges){
+        listContainer.innerHTML = '<p style="color:#64748b;font-size:.9rem;">কোনো ডেলিভারি চার্জ নির্ধারণ করা নেই।</p>';
+        return;
+    }
+
+    let html = '';
+    Object.keys(charges).forEach(key=>{
+        const del = charges[key];
+        html += `
+            <div class="data-card">
+                <div><strong>${del.area}</strong> - ৳ ${del.fee}</div>
+                <button type="button" class="btn btn-danger" style="padding:4px 8px; font-size:.75rem; width:auto;" onclick="deleteDelivery('${key}')"><i class="fa-solid fa-trash"></i></button>
+            </div>`;
+    });
+    listContainer.innerHTML = html;
+});
+
+document.getElementById('deliveryForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const area = document.getElementById('delAreaName').value.trim();
+    const fee = parseFloat(document.getElementById('delAreaFee').value);
+
+    db.ref('shopData/deliveryCharges').push({ area, fee }).then(()=>{
+        showToast('ডেলিভারি এলাকা যুক্ত হয়েছে');
+        this.reset();
+    });
+});
+
+function deleteDelivery(id){
+    if(confirm('এটি ডিলিট করতে চান?')){
+        db.ref(`shopData/deliveryCharges/${id}`).remove().then(()=>{
+            showToast('মুছে ফেলা হয়েছে');
+        });
+    }
+}
+
+</script>
+
+</body>
+</html>
